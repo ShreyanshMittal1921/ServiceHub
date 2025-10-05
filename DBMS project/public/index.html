@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Services Finder - Find Trusted Workers Near You</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      background: #0a0a0a;
+      color: #fff;
+    }
+
+    /* Animated Background */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(252, 70, 107, 0.3), transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(103, 178, 255, 0.3), transparent 50%);
+      animation: gradient 15s ease infinite;
+    }
+
+    @keyframes gradient {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(0px);
+    }
+
+    /* Floating particles */
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-100px) rotate(180deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      padding: 40px 20px;
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
+      text-shadow: 2px 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero h1 span {
+      background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      font-weight: 300;
+      text-shadow: 1px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Modern Search Box */
+    .search-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .search-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .input-group {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #667eea;
+      font-size: 1.2rem;
+      z-index: 1;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 18px 20px 18px 55px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: #667eea;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .search-box button {
+      padding: 18px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .search-box button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .search-box button i {
+      margin-right: 8px;
+    }
+
+    /* Stats Section */
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+
+    .stat {
+      text-align: center;
+      flex: 1;
+      min-width: 200px;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    .stat:hover {
+      transform: translateY(-10px) scale(1.05);
+      background: rgba(102, 126, 234, 0.2);
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+    }
+
+    .stat h2 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .stat p {
+      font-size: 1.1rem;
+      color: #ccc;
+      font-weight: 300;
+    }
+
+    /* Categories Section */
+    .categories {
+      padding: 100px 20px;
+      background: #0a0a0a;
+      text-align: center;
+    }
+
+    .categories h2 {
+      font-size: 2.8rem;
+      margin-bottom: 60px;
+      font-weight: 700;
+      background: linear-gradient(120deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .category-card {
+      position: relative;
+      padding: 50px 30px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent, rgba(102, 126, 234, 0.2));
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .category-card:hover::before {
+      opacity: 1;
+    }
+
+    .category-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 30px 80px rgba(102, 126, 234, 0.4);
+      border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .category-card i {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 25px;
+      transition: all 0.5s ease;
+      color: #8fd3f4;
+    }
+
+    .category-card:hover i {
+      transform: scale(1.2) rotate(10deg);
+      filter: drop-shadow(0 10px 20px rgba(143, 211, 244, 0.5));
+    }
+
+    .category-card.plumber i { color: #4facfe; }
+    .category-card.electrician i { color: #f093fb; }
+    .category-card.carpenter i { color: #84fab0; }
+
+    .category-card h3 {
+      position: relative;
+      z-index: 1;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .category-card p {
+      position: relative;
+      z-index: 1;
+      color: #aaa;
+      font-size: 1rem;
+      font-weight: 300;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      text-align: center;
+      background: #000;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    footer p {
+      color: #888;
+      font-weight: 300;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .search-box {
+        padding: 20px;
+      }
+
+      .stat h2 {
+        font-size: 2.5rem;
+      }
+
+      .categories h2 {
+        font-size: 2rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Scroll Animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="overlay"></div>
+    <div class="particles" id="particles"></div>
+    <div class="hero-content">
+      <h1>Find Trusted <span>Workers</span> Near You</h1>
+      <p>Plumbers, Electricians, Carpenters & more — All in one platform!</p>
+      <!-- Search Form -->
+      <form id="searchForm" class="search-box">
+        <div class="input-group">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="location" placeholder="Enter your location" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-tools"></i>
+          <select id="service">
+            <option value="Plumber">Plumber</option>
+            <option value="Electrician">Electrician</option>
+            <option value="Carpenter">Carpenter</option>
+          </select>
+        </div>
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stat fade-in">
+      <h2 data-target="500">0</h2>
+      <p>Active Workers</p>
+    </div>
+    <div class="stat fade-in">
+      <h2 data-target="1000">0</h2>
+      <p>Jobs Completed</p>
+    </div>
+    <div class="stat fade-in">
+      <h2 data-target="300">0</h2>
+      <p>Happy Clients</p>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories">
+    <h2 class="fade-in">Popular Services</h2>
+    <div class="category-grid">
+      <div class="category-card plumber fade-in">
+        <i class="fas fa-faucet fa-3x"></i>
+        <h3>Plumbers</h3>
+        <p>Fix leaks, install taps & more</p>
+      </div>
+      <div class="category-card electrician fade-in">
+        <i class="fas fa-bolt fa-3x"></i>
+        <h3>Electricians</h3>
+        <h>Wiring, fans, appliances</p>
+      </div>
+      <div class="category-card carpenter fade-in">
+        <i class="fas fa-hammer fa-3x"></i>
+        <h3>Carpenters</h3>
+        <p>Furniture, repairs & fittings</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>⚡ Powered by Urban Services Finder | Made with ❤️</p>
+  </footer>
+
+  <script>
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      const size = Math.random() * 60 + 20;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = (Math.random() * 20 + 15) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Search redirection
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const service = document.getElementById("service").value;
+      const location = document.getElementById("location").value;
+      window.location.href = `results.html?service=${service}&location=${location}`;
+    });
+
+    // Animated counters
+    const counters = document.querySelectorAll('.stat h2');
+    let animated = false;
+
+    const animateCounters = () => {
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const increment = target / 100;
+        let count = 0;
+        
+        const updateCount = () => {
+          if (count < target) {
+            count += increment;
+            counter.innerText = Math.ceil(count);
+            setTimeout(updateCount, 20);
+          } else {
+            counter.innerText = target + '+';
+          }
+        };
+        updateCount();
+      });
+    };
+
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.2,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          
+          // Trigger counter animation when stats section is visible
+          if (!animated && entry.target.classList.contains('stat')) {
+            animated = true;
+            animateCounters();
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
